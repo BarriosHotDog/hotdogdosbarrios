@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hot Dog dos Barrios — Peça Online</title>
+  <style>
+    :root{/* CSS variables are set inlined via JS-like token */}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#0b0c0f 0%, #0f1115 100%);color:var(--text);-webkit-font-smoothing:antialiased}
+    header{padding:20px 18px;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;align-items:center;gap:16px}
+    .brand{display:flex;flex-direction:column}
+    .brand h1{margin:0;font-size:20px;letter-spacing:1px}
+    .brand p{margin:0;color:var(--muted);font-size:13px}
+    .container{display:grid;grid-template-columns:1fr 380px;gap:24px;padding:22px;max-width:1100px;margin:20px auto}
+    @media(max-width:900px){.container{grid-template-columns:1fr;padding:12px}}
+    .menu{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:18px;border-radius:12px}
+    .section{margin-bottom:18px}
+    .section h2{margin:0 0 8px 0;font-size:16px;color:var(--accent);}
+    .items{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+    @media(max-width:600px){.items{grid-template-columns:1fr}}
+    .item{background:var(--card);padding:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(255,255,255,0.02)}
+    .item .info{display:flex;align-items:center;gap:10px;max-width:70%}
+    .thumb{width:72px;height:52px;border-radius:8px;object-fit:cover;flex-shrink:0}
+    .item .name{font-weight:600}
+    .item .desc{font-size:12px;color:var(--muted)}
+    .item .price{font-weight:700;color:var(--accent-2)}
+    .item button{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text);padding:6px 8px;border-radius:8px;cursor:pointer}
+    .cart{position:sticky;top:20px;background:linear-gradient(180deg,#0d0e10,#0f1115);padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+    .cart h3{margin:0 0 8px 0}
+    .cart .cart-list{max-height:360px;overflow:auto;margin-bottom:8px}
+    .cart-row{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,0.03)}
+    .cart-row .qty{background:rgba(255,255,255,0.02);padding:4px 8px;border-radius:6px}
+    .total{display:flex;justify-content:space-between;font-weight:700;padding-top:8px;border-top:1px solid rgba(255,255,255,0.03);margin-top:8px}
+    .checkout{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+    .checkout input, .checkout textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text)}
+    .btn-wa{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:none;padding:12px;border-radius:10px;color:#111;font-weight:800;cursor:pointer;font-size:15px}
+    footer{max-width:1100px;margin:16px auto;color:var(--muted);font-size:13px;padding:10px}
+    .small{font-size:12px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>Hot Dog dos Barrios</h1>
+      <p>Atendimento: Seg a Sáb • 18:00 - 00:00 • Delivery (48) 3066-1288</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="menu">
+      <div class="section">
+        <h2>Cardápio — Tradicionais</h2>
+        <div class="items" id="tradicionais"></div>
+      </div>
+
+      <div class="section">
+        <h2>Prensados</h2>
+        <div class="items" id="prensados"></div>
+      </div>
+
+      <div class="section">
+        <h2>Porções & Hot Dog Doce</h2>
+        <div class="items" id="porcoes"></div>
+      </div>
+
+      <div class="section">
+        <h2>Bebidas</h2>
+        <div class="items" id="bebidas"></div>
+      </div>
+
+      <div class="section">
+        <h2>Adicionais</h2>
+        <div class="items" id="adicionais"></div>
+      </div>
+
+      <p class="small">Todos acompanham: cebola, tomate, milho, ervilha, queijo, batata palha, molho quente, maionese, ketchup e mostarda.</p>
+    </section>
+
+    <aside class="cart">
+      <h3>Seu pedido</h3>
+      <div class="cart-list" id="cartList">
+        <p class="small">Nenhum item no carrinho</p>
+      </div>
+
+      <div class="total"><span>Total</span><span id="totalPrice">R$0,00</span></div>
+
+      <div class="checkout">
+        <label class="small">Nome</label>
+        <input id="customerName" placeholder="Seu nome" />
+        <label class="small">Endereço de entrega</label>
+        <input id="customerAddress" value="Rua Domingos Coelho, 49 - Praia João Rosa" />
+        <label class="small">Observações</label>
+        <textarea id="notes" rows="3" placeholder="Ex: sem cebola / trocar molho"></textarea>
+        <button class="btn-wa" id="checkoutBtn">Finalizar e enviar pelo WhatsApp</button>
+        <div class="small">Ao finalizar, abriremos o WhatsApp para enviar o pedido automaticamente.</div>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    <div>Telefone: (48) 3066-1288 • Instagram: @cachorroquentedosbarrios</div>
+  </footer>
+
+  <script>
+    const menu = {{
+      "tradicionais":[
+        {{id:'t1',name:'02 Salsichas',price:21,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%232b2b2b%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EHot%20Dog%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'t2',name:'02 Calabresinhas',price:22,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%232b2b2b%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EHot%20Dog%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'t3',name:'Frango desfiado',price:22,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%232b2b2b%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EHot%20Dog%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}}
+      ],
+      "prensados":[
+        {{id:'p1',name:'02 Salsichas (prensado)',price:25,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%232b2b2b%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EHot%20Dog%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'p2',name:'02 Salsichas + 02 Calabresinhas',price:29,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%232b2b2b%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EHot%20Dog%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'p3',name:'02 Salsichas + Frango desfiado',price:29,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%232b2b2b%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EHot%20Dog%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'p4',name:'02 Calabresinhas + Frango desfiado',price:32,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%232b2b2b%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EHot%20Dog%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'p5',name:'Frango desfiado (prensado)',price:27,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%232b2b2b%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EHot%20Dog%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'p6',name:'Strogonoff',price:33,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%232b2b2b%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EHot%20Dog%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'p7',name:'Calabresinha Cozida',price:27,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%232b2b2b%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EHot%20Dog%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'p8',name:'Calabresinha Frita',price:28,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%232b2b2b%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EHot%20Dog%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'p9',name:'Especial triplo',price:34,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%232b2b2b%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EHot%20Dog%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'p10',name:'Prensado kids',price:16,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%232b2b2b%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EHot%20Dog%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}}
+      ],
+      "porcoes":[
+        {{id:'por1',name:'Batata Média (300g)',price:22,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%233a2b1f%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EBatata%20Frita%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'por2',name:'Batata Grande (600g)',price:30,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%233a2b1f%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EBatata%20Frita%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'hd1',name:'Hot Dog Doce - Pequeno',price:16,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%235a2b3a%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EHot%20Dog%20Doce%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'hd2',name:'Hot Dog Doce - Grande',price:20,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%235a2b3a%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EHot%20Dog%20Doce%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}}
+      ],
+      "bebidas":[
+        {{id:'b1',name:'Refrigerante lata',price:5,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%231f3a3a%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3ERefrigerante%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'b2',name:'Refrigerante 600ml',price:8,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%231f3a3a%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3ERefrigerante%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'b3',name:'Refrigerante 1 LT',price:10,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%231f3a3a%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3ERefrigerante%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'b4',name:'Refrigerante 2 LT',price:15,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%231f3a3a%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3ERefrigerante%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'b5',name:'Água (c/ sem gás)',price:3,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%231f3a3a%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3ERefrigerante%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'b6',name:'Cerveja lata',price:6,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%231f3a3a%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3ERefrigerante%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'b7',name:'Long neck',price:12,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%231f3a3a%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3ERefrigerante%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}}
+      ],
+      "adicionais":[
+        {{id:'a1',name:'Salsicha (adicional)',price:3,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%232b2b2b%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EHot%20Dog%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'a2',name:'Calabresa (adicional)',price:6,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%232b2b2b%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EHot%20Dog%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'a3',name:'Calabresinha Frita (adicional)',price:6,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%232b2b2b%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EHot%20Dog%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'a4',name:'Frango (adicional)',price:6,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%232b2b2b%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EHot%20Dog%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'a5',name:'Bacon',price:6,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%232b2b2b%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EHot%20Dog%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'a6',name:'Cheddar',price:6,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%232b2b2b%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EHot%20Dog%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}},
+        {{id:'a7',name:'Catupiry',price:6,img:'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22300%22%3E%0A%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%232b2b2b%22%20/%3E%0A%20%20%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2228%22%20fill%3D%22%23fff%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%3EHot%20Dog%3C/text%3E%0A%20%20%20%20%3C/svg%3E'}}
+      ]
+    }}
+
+    const cart = {{}};
+    function formatPrice(n){{return 'R$'+n.toFixed(2).replace('.',',')}}
+
+    function renderSection(id, items){{
+      const container = document.getElementById(id)
+      items.forEach(it=>{{
+        const el = document.createElement('div')
+        el.className='item'
+        el.innerHTML = `
+          <div class="info">
+            <img class="thumb" src="${{it.img}}" alt="${{it.name}}">
+            <div>
+              <div class="name">${{it.name}}</div>
+              <div class="desc small"></div>
+            </div>
+          </div>
+          <div style="text-align:right">
+            <div class="price">${{formatPrice(it.price)}}</div>
+            <div style="margin-top:8px"><button onclick="addToCart('${{it.id}}')">Adicionar</button></div>
+          </div>
+        `
+        container.appendChild(el)
+      }})
+    }}
+
+    renderSection('tradicionais', menu.tradicionais)
+    renderSection('prensados', menu.prensados)
+    renderSection('porcoes', menu.porcoes)
+    renderSection('bebidas', menu.bebidas)
+    renderSection('adicionais', menu.adicionais)
+
+    function addToCart(id){{ ... }}
+  </script>
+</body>
+</html>
